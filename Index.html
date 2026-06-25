@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila Cirúrgica ORL</title>
+    <style>
+      :root {
+        --ink: #19313a;
+        --muted: #647781;
+        --line: #d5e3e5;
+        --surface: #ffffff;
+        --surface-soft: #f7fbfb;
+        --bg: #eaf2f1;
+        --panel: #dfeeed;
+        --primary: #08766f;
+        --primary-dark: #075f5a;
+        --primary-soft: #d9f1ee;
+        --accent: #d85f43;
+        --accent-soft: #ffe1d8;
+        --gold: #c99018;
+        --danger: #b42318;
+        --shadow: 0 18px 42px rgba(25, 49, 58, 0.14);
+        --shadow-soft: 0 10px 24px rgba(25, 49, 58, 0.10);
+        --warning: #fff1ba;
+        --blue: #dbeeff;
+        --green: #ddf3df;
+        --purple: #eadfff;
+        --red: #ffd7c7;
+        --gray: #edf1f2;
+        --dark-gray: #c5ced1;
+      }
+    
+      * {
+        box-sizing: border-box;
+      }
+    
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          linear-gradient(90deg, rgba(8, 118, 111, 0.06) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(8, 118, 111, 0.06) 1px, transparent 1px),
+          linear-gradient(135deg, #e8f3f1 0%, #f6faf8 44%, #edf3f7 100%);
+        background-size: 34px 34px, 34px 34px, auto;
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+    
+      button, input, select, textarea {
+        font: inherit;
+      }
+    
+      button {
+        cursor: pointer;
+      }
+    
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.65;
+      }
+    
+      label {
+        display: grid;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+      }
+    
+      input, select, textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 11px 12px;
+        color: var(--ink);
+        background: #fbfefe;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+        outline: none;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      }
+    
+      input:focus, select:focus, textarea:focus {
+        border-color: var(--primary);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(8, 118, 111, 0.16);
+      }
+    
+      textarea {
+        min-height: 92px;
+        resize: vertical;
+      }
+    
+      .hidden {
+        display: none !important;
+      }
+    
+      .login-screen {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+    
+      .login-screen::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(120deg, rgba(8, 118, 111, 0.92), rgba(25, 49, 58, 0.88)),
+          repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.13) 0 1px, transparent 1px 22px);
+      }
+    
+      .login-card {
+        position: relative;
+        width: min(460px, 100%);
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 8px;
+        padding: 30px;
+        display: grid;
+        gap: 18px;
+        box-shadow: var(--shadow);
+      }
+    
+      .login-card::before {
+        content: "";
+        width: 58px;
+        height: 8px;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--primary), var(--accent), var(--gold));
+      }
+    
+      .login-card h1, .topbar h1 {
+        margin: 4px 0 0;
+        font-size: 28px;
+        letter-spacing: 0;
+        line-height: 1.12;
+      }
+    
+      .eyebrow {
+        margin: 0;
+        color: var(--primary);
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 900;
+      }
+    
+      .login-card .eyebrow {
+        color: var(--accent);
+      }
+    
+      .app-shell {
+        width: min(1480px, 100%);
+        margin: 0 auto;
+        padding: 22px;
+      }
+    
+      .topbar {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 18px;
+        padding: 18px;
+        color: #fff;
+        border-radius: 8px;
+        background:
+          linear-gradient(90deg, rgba(8, 118, 111, 0.96), rgba(25, 49, 58, 0.94)),
+          repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 1px, transparent 1px 18px);
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+      }
+    
+      .topbar::after {
+        content: "";
+        position: absolute;
+        right: 18px;
+        bottom: 0;
+        width: 210px;
+        height: 5px;
+        background: linear-gradient(90deg, var(--accent), #f3bc4d, #79c6be);
+        border-radius: 99px 99px 0 0;
+      }
+    
+      .topbar .eyebrow {
+        color: #aee6df;
+      }
+    
+      .topbar h1 {
+        color: #fff;
+      }
+    
+      .toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        margin: 18px 0;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow: var(--shadow-soft);
+        backdrop-filter: blur(8px);
+      }
+    
+      .user-area {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+    
+      #usuarioLogado {
+        padding: 9px 11px;
+        border-radius: 8px;
+        color: #e9fffb;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        font-weight: 800;
+      }
+    
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+    
+      .summary-card {
+        position: relative;
+        min-height: 104px;
+        background: linear-gradient(180deg, #ffffff, #f5fbfa);
+        border: 1px solid rgba(213, 227, 229, 0.95);
+        border-radius: 8px;
+        padding: 15px;
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+      }
+    
+      .summary-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 6px;
+        background: var(--primary);
+      }
+    
+      .summary-card:nth-child(2)::before,
+      .summary-card:nth-child(7)::before,
+      .summary-card:nth-child(8)::before {
+        background: var(--gold);
+      }
+    
+      .summary-card:nth-child(4)::before,
+      .summary-card:nth-child(5)::before {
+        background: #4f9d57;
+      }
+    
+      .summary-card:nth-child(6)::before {
+        background: var(--accent);
+      }
+    
+      .summary-card strong {
+        display: block;
+        font-size: 30px;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+    
+      .summary-card span {
+        color: var(--muted);
+        font-weight: 800;
+        line-height: 1.25;
+      }
+    
+      .filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+    
+      .filter-button, .ghost-button, .secondary-button, .primary-button, .danger-button, .icon-button {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: var(--surface);
+        color: var(--ink);
+        font-weight: 900;
+        box-shadow: 0 2px 0 rgba(25, 49, 58, 0.06);
+        transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+      }
+    
+      .filter-button {
+        padding: 9px 11px;
+        color: #42616a;
+        background: #f8fcfb;
+      }
+    
+      .filter-button:hover, .ghost-button:hover, .secondary-button:hover, .primary-button:hover, .danger-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(25, 49, 58, 0.12);
+      }
+    
+      .filter-button.active {
+        border-color: var(--primary);
+        color: #fff;
+        background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+      }
+    
+      .primary-button {
+        background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+        border-color: var(--primary-dark);
+        color: #fff;
+      }
+    
+      .secondary-button {
+        background: var(--primary-soft);
+        border-color: #afd9d5;
+        color: var(--primary-dark);
+      }
+    
+      .ghost-button {
+        background: rgba(255, 255, 255, 0.86);
+      }
+    
+      .danger-button {
+        background: #fff0ed;
+        border-color: #f0b5ab;
+        color: var(--danger);
+      }
+    
+      .patients-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+    
+      .patient-card {
+        position: relative;
+        border: 1px solid rgba(213, 227, 229, 0.95);
+        border-left: 7px solid var(--primary);
+        background: var(--surface);
+        border-radius: 8px;
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+        box-shadow: var(--shadow-soft);
+        overflow: hidden;
+      }
+    
+      .patient-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.42);
+        pointer-events: none;
+      }
+    
+      .patient-card[data-status="Aguardando tomografia"],
+      .patient-card[data-status="Aguardando exames/documentos"] {
+        background: linear-gradient(180deg, #fff6c9, var(--warning));
+        border-left-color: var(--gold);
+      }
+    
+      .patient-card[data-status="Solicitado ao plano de saúde"],
+      .patient-card[data-status="Em análise pelo plano"] {
+        background: linear-gradient(180deg, #edf7ff, var(--blue));
+        border-left-color: #2f77ba;
+      }
+    
+      .patient-card[data-status="Autorizado"],
+      .patient-card[data-status="Aguardando agendamento"] {
+        background: linear-gradient(180deg, #f0fbef, var(--green));
+        border-left-color: #4f9d57;
+      }
+    
+      .patient-card[data-status="Agendado"] {
+        background: linear-gradient(180deg, #f5efff, var(--purple));
+        border-left-color: #8568c5;
+      }
+    
+      .patient-card[data-status="Pendente / travado"] {
+        background: linear-gradient(180deg, #ffe9df, var(--red));
+        border-left-color: var(--accent);
+      }
+    
+      .patient-card[data-status="Realizado"] {
+        background: linear-gradient(180deg, #f8fafb, var(--gray));
+        border-left-color: #839198;
+      }
+    
+      .patient-card[data-status="Cancelado"] {
+        background: linear-gradient(180deg, #dce3e5, var(--dark-gray));
+        border-left-color: #52656d;
+      }
+    
+      .card-head {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+    
+      .card-head h3 {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.22;
+      }
+    
+      .badge {
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(25, 49, 58, 0.12);
+        padding: 6px 10px;
+        color: #28454e;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+        box-shadow: 0 3px 10px rgba(25, 49, 58, 0.08);
+      }
+    
+      .patient-details {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 12px;
+        color: var(--ink);
+      }
+    
+      .patient-details div {
+        min-width: 0;
+        word-break: break-word;
+      }
+    
+      .patient-details span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+    
+      .notes-box {
+        position: relative;
+        background: rgba(255, 249, 211, 0.92);
+        border: 1px solid #e0c94c;
+        border-left: 5px solid var(--gold);
+        border-radius: 8px;
+        padding: 11px 12px;
+        min-height: 46px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.76);
+      }
+    
+      .attention-list {
+        position: relative;
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+    
+      .attention-chip {
+        background: #fff;
+        border: 1px solid #efa15f;
+        color: #834400;
+        border-radius: 999px;
+        padding: 5px 9px;
+        font-size: 12px;
+        font-weight: 900;
+        box-shadow: 0 2px 8px rgba(131, 68, 0, 0.10);
+      }
+    
+      .card-actions {
+        position: relative;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+    
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(25, 49, 58, 0.55);
+        display: grid;
+        place-items: center;
+        padding: 18px;
+        z-index: 20;
+      }
+    
+      .modal {
+        width: min(980px, 100%);
+        max-height: 90vh;
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+      }
+    
+      .modal-header {
+        padding: 16px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        background: linear-gradient(90deg, var(--surface-soft), #fff);
+      }
+    
+      .modal-header h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+    
+      .icon-button {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        font-size: 24px;
+      }
+    
+      .modal-body {
+        overflow: auto;
+        padding: 16px;
+        background: #fbfdfd;
+      }
+    
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+    
+      .form-grid .full {
+        grid-column: 1 / -1;
+      }
+    
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+      }
+    
+      .history-list, .admin-grid {
+        display: grid;
+        gap: 10px;
+      }
+    
+      .history-item, .admin-panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        background: #fff;
+        box-shadow: 0 4px 14px rgba(25, 49, 58, 0.06);
+      }
+    
+      .admin-panel h3 {
+        margin: 0 0 10px;
+        color: var(--primary-dark);
+      }
+    
+      .inline-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: end;
+        margin-bottom: 10px;
+      }
+    
+      .error-message {
+        margin: 0;
+        color: var(--danger);
+        font-weight: 900;
+      }
+    
+      .empty-state {
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px dashed #aec5c8;
+        border-radius: 8px;
+        padding: 18px;
+        text-align: center;
+        color: var(--muted);
+        font-weight: 900;
+      }
+    
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        background: var(--ink);
+        color: #fff;
+        border-radius: 8px;
+        padding: 12px 14px;
+        z-index: 30;
+        max-width: 360px;
+        box-shadow: var(--shadow-soft);
+      }
+    
+      @media (max-width: 1080px) {
+        .summary-grid, .patients-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    
+      @media (max-width: 720px) {
+        .app-shell {
+          padding: 14px;
+        }
+    
+        .topbar, .toolbar {
+          align-items: stretch;
+          flex-direction: column;
+        }
+    
+        .user-area {
+          justify-content: flex-start;
+        }
+    
+        .summary-grid, .patients-grid, .form-grid, .patient-details {
+          grid-template-columns: 1fr;
+        }
+    
+        .inline-form {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app">
+      <section id="loginView" class="login-screen">
+        <form class="login-card" id="loginForm">
+          <div>
+            <p class="eyebrow">Acompanhamento cirúrgico</p>
+            <h1>Fila Cirúrgica ORL</h1>
+          </div>
+          <label>
+            Usuário
+            <input id="loginUsuario" name="usuario" autocomplete="username" required>
+          </label>
+          <label>
+            Código de acesso
+            <input id="loginCodigo" name="codigo" type="password" autocomplete="current-password" required>
+          </label>
+          <button class="primary-button" type="submit">Entrar</button>
+          <p id="loginErro" class="error-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="mainView" class="app-shell hidden">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Fila Cirúrgica ORL</p>
+            <h1>Acompanhamento de pacientes</h1>
+          </div>
+          <div class="user-area">
+            <span id="usuarioLogado"></span>
+            <button class="ghost-button" id="adminButton" type="button">Administração</button>
+            <button class="secondary-button" id="refreshButton" type="button">Atualizar</button>
+            <button class="danger-button" id="logoutButton" type="button">Sair</button>
+          </div>
+        </header>
+
+        <section class="summary-grid" id="summaryGrid"></section>
+
+        <section class="toolbar">
+          <div class="filters" id="filters"></div>
+          <button class="primary-button" id="newPatientButton" type="button">Novo paciente</button>
+        </section>
+
+        <section id="patientsList" class="patients-grid"></section>
+        <p id="emptyState" class="empty-state hidden">Nenhum paciente encontrado para este filtro.</p>
+      </section>
+    </main>
+
+    <div id="modalBackdrop" class="modal-backdrop hidden">
+      <section class="modal" role="dialog" aria-modal="true">
+        <header class="modal-header">
+          <h2 id="modalTitle"></h2>
+          <button class="icon-button" id="closeModalButton" type="button" aria-label="Fechar">×</button>
+        </header>
+        <div id="modalBody" class="modal-body"></div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script>
+      const estado = {
+        sessao: null,
+        pacientes: [],
+        hospitais: [],
+        planosSaude: [],
+        modelosWhatsApp: [],
+        usuarios: [],
+        configuracoes: {},
+        filtro: 'Todos',
+        statusDisponiveis: [],
+        proximasAcoes: []
+      };
+    
+      const filtros = [
+        'Todos',
+        'Precisa de atenção',
+        'Aguardando tomografia',
+        'Aguardando exames/documentos',
+        'Solicitado ao plano',
+        'Em análise pelo plano',
+        'Autorizado',
+        'Aguardando agendamento',
+        'Agendado',
+        'Pendentes/travados',
+        'Realizados',
+        'Cancelados',
+        'Próximos contatos hoje',
+        'Próximos contatos atrasados',
+        'Sem próxima ação definida',
+        'Particulares',
+        'Convênios',
+        'Arquivados'
+      ];
+    
+      document.addEventListener('DOMContentLoaded', () => {
+        estado.sessao = carregarSessao();
+        prepararEventos();
+        if (estado.sessao) {
+          mostrarApp();
+          carregarDados();
+        } else {
+          mostrarLogin();
+        }
+      });
+    
+      function prepararEventos() {
+        document.getElementById('loginForm').addEventListener('submit', entrar);
+        document.getElementById('logoutButton').addEventListener('click', sair);
+        document.getElementById('refreshButton').addEventListener('click', carregarDados);
+        document.getElementById('newPatientButton').addEventListener('click', () => abrirModalPaciente());
+        document.getElementById('closeModalButton').addEventListener('click', fecharModal);
+        document.getElementById('adminButton').addEventListener('click', abrirAdmin);
+      }
+    
+      function entrar(event) {
+        event.preventDefault();
+        const usuario = document.getElementById('loginUsuario').value.trim();
+        const codigo = document.getElementById('loginCodigo').value;
+        document.getElementById('loginErro').textContent = '';
+    
+        chamarServidor('validarLogin', usuario, codigo)
+          .then(resposta => {
+            if (!resposta.sucesso) {
+              document.getElementById('loginErro').textContent = resposta.mensagem || 'Usuário ou código de acesso inválido.';
+              return;
+            }
+            estado.sessao = resposta.dados;
+            sessionStorage.setItem('filaCirurgicaSessao', JSON.stringify(estado.sessao));
+            mostrarApp();
+            carregarDados();
+          })
+          .catch(erro => document.getElementById('loginErro').textContent = erro.message);
+      }
+    
+      function sair() {
+        sessionStorage.removeItem('filaCirurgicaSessao');
+        estado.sessao = null;
+        estado.pacientes = [];
+        mostrarLogin();
+      }
+    
+      function carregarSessao() {
+        try {
+          return JSON.parse(sessionStorage.getItem('filaCirurgicaSessao'));
+        } catch (erro) {
+          return null;
+        }
+      }
+    
+      function mostrarLogin() {
+        document.getElementById('loginView').classList.remove('hidden');
+        document.getElementById('mainView').classList.add('hidden');
+      }
+    
+      function mostrarApp() {
+        document.getElementById('loginView').classList.add('hidden');
+        document.getElementById('mainView').classList.remove('hidden');
+        document.getElementById('usuarioLogado').textContent = `${estado.sessao.usuario} · ${estado.sessao.perfil}`;
+        document.getElementById('adminButton').classList.toggle('hidden', estado.sessao.perfil !== 'Administrador');
+      }
+    
+      function carregarDados() {
+        mostrarToast('Atualizando dados...');
+        chamarServidor('obterDadosIniciais', estado.sessao)
+          .then(dados => {
+            estado.pacientes = dados.pacientes || [];
+            estado.hospitais = dados.hospitais || [];
+            estado.planosSaude = dados.planosSaude || [];
+            estado.modelosWhatsApp = dados.modelosWhatsApp || [];
+            estado.usuarios = dados.usuarios || [];
+            estado.configuracoes = dados.configuracoes || {};
+            estado.statusDisponiveis = dados.statusDisponiveis || [];
+            estado.proximasAcoes = dados.proximasAcoes || [];
+            renderizarResumo(dados.resumo);
+            renderizarFiltros();
+            renderizarPacientes();
+            mostrarToast('Dados atualizados.');
+          })
+          .catch(mostrarErro);
+      }
+    
+      function renderizarResumo(resumo) {
+        const itens = [
+          ['Total em acompanhamento', resumo.total],
+          ['Aguardando tomografia', resumo.aguardandoTomografia],
+          ['Solicitados ao plano', resumo.solicitadosPlano],
+          ['Autorizados', resumo.autorizados],
+          ['Agendados', resumo.agendados],
+          ['Pendentes/travados', resumo.pendentesTravados],
+          ['Próximos contatos hoje', resumo.proximosHoje],
+          ['Próximos contatos atrasados', resumo.proximosAtrasados]
+        ];
+    
+        document.getElementById('summaryGrid').innerHTML = itens.map(([label, valor]) => `
+          <article class="summary-card">
+            <strong>${valor || 0}</strong>
+            <span>${escapar(label)}</span>
+          </article>
+        `).join('');
+      }
+    
+      function renderizarFiltros() {
+        document.getElementById('filters').innerHTML = filtros.map(filtro => `
+          <button type="button" class="filter-button ${estado.filtro === filtro ? 'active' : ''}" data-filter="${escapar(filtro)}">${escapar(filtro)}</button>
+        `).join('');
+    
+        document.querySelectorAll('.filter-button').forEach(botao => {
+          botao.addEventListener('click', () => {
+            estado.filtro = botao.dataset.filter;
+            renderizarFiltros();
+            renderizarPacientes();
+          });
+        });
+      }
+    
+      function renderizarPacientes() {
+        const pacientes = filtrarLocalmente(estado.pacientes, estado.filtro);
+        const lista = document.getElementById('patientsList');
+        const vazio = document.getElementById('emptyState');
+        vazio.classList.toggle('hidden', pacientes.length > 0);
+        lista.innerHTML = pacientes.map(renderizarCardPaciente).join('');
+        lista.querySelectorAll('[data-action]').forEach(botao => {
+          botao.addEventListener('click', () => executarAcaoCard(botao.dataset.action, botao.dataset.id));
+        });
+      }
+    
+      function renderizarCardPaciente(paciente) {
+        const podeArquivar = estado.sessao.perfil === 'Administrador';
+        const motivos = (paciente.MotivosAtenção || []).map(motivo => `<span class="attention-chip">${escapar(motivo)}</span>`).join('');
+        return `
+          <article class="patient-card" data-status="${escapar(paciente.Status)}">
+            <div class="card-head">
+              <h3>${escapar(paciente.Nome)}</h3>
+              <span class="badge">${escapar(paciente.Status)}</span>
+            </div>
+            ${motivos ? `<div class="attention-list">${motivos}</div>` : ''}
+            <div class="patient-details">
+              <div><span>Plano:</span> ${escapar(paciente.PlanoSaúde || 'Particular')}</div>
+              <div><span>Telefone:</span> ${escapar(paciente.Telefone)}</div>
+              <div><span>Email:</span> ${escapar(paciente.Email || 'Não informado')}</div>
+              <div><span>Próxima ação:</span> ${escapar(paciente.PróximaAção || 'Não definida')}</div>
+              <div><span>Próximo contato:</span> ${formatarData(paciente.DataPróximoContato) || 'Não definido'}</div>
+              ${paciente.DataCirurgia ? `<div><span>Cirurgia:</span> ${formatarData(paciente.DataCirurgia)} ${escapar(paciente.HoraCirurgia || '')}</div>` : ''}
+              ${paciente.Hospital ? `<div><span>Hospital:</span> ${escapar(paciente.Hospital)}</div>` : ''}
+              <div><span>Última atualização:</span> ${escapar(paciente.AtualizadoEm || 'Não informado')}</div>
+            </div>
+            <div class="notes-box">${escapar(paciente.Observações || 'Sem observações.')}</div>
+            <div class="card-actions">
+              <button class="secondary-button" data-action="editar" data-id="${paciente.ID}" type="button">Editar</button>
+              <button class="secondary-button" data-action="status" data-id="${paciente.ID}" type="button">Mudar status</button>
+              <button class="ghost-button" data-action="historico" data-id="${paciente.ID}" type="button">Ver histórico</button>
+              <button class="primary-button" data-action="whatsapp" data-id="${paciente.ID}" type="button">WhatsApp</button>
+              ${podeArquivar && paciente.Arquivado !== 'Sim' ? `<button class="danger-button" data-action="arquivar" data-id="${paciente.ID}" type="button">Arquivar</button>` : ''}
+            </div>
+          </article>
+        `;
+      }
+    
+      function executarAcaoCard(acao, id) {
+        const paciente = estado.pacientes.find(item => item.ID === id);
+        if (!paciente) return;
+        if (acao === 'editar') abrirModalPaciente(paciente);
+        if (acao === 'status') abrirModalStatus(paciente);
+        if (acao === 'historico') abrirHistorico(paciente);
+        if (acao === 'whatsapp') abrirWhatsApp(paciente);
+        if (acao === 'arquivar') arquivarPaciente(paciente);
+      }
+    
+      function abrirModalPaciente(paciente) {
+        const edicao = Boolean(paciente);
+        abrirModal(edicao ? 'Editar paciente' : 'Novo paciente', `
+          <form id="patientForm" class="form-grid">
+            <input type="hidden" name="ID" value="${escapar(paciente?.ID || '')}">
+            ${campo('Nome', paciente?.Nome, true)}
+            ${campo('Telefone', paciente?.Telefone, true)}
+            ${campo('Email', paciente?.Email)}
+            ${campo('DataNascimento', paciente?.DataNascimento, false, 'date')}
+            ${select('TipoPagamento', ['Convênio', 'Particular'], paciente?.TipoPagamento, true)}
+            ${campoComLista('PlanoSaúde', estado.planosSaude.map(item => item.Nome), paciente?.PlanoSaúde)}
+            ${select('Status', estado.statusDisponiveis, paciente?.Status, true)}
+            ${select('PróximaAção', estado.proximasAcoes, paciente?.PróximaAção, true)}
+            ${campo('DataPróximoContato', paciente?.DataPróximoContato, false, 'date')}
+            ${campo('DataCirurgia', paciente?.DataCirurgia, false, 'date')}
+            ${campo('HoraCirurgia', paciente?.HoraCirurgia, false, 'time')}
+            ${select('Hospital', estado.hospitais.map(item => item.Nome), paciente?.Hospital)}
+            <label class="full">Observações<textarea name="Observações">${escapar(paciente?.Observações || '')}</textarea></label>
+            <div class="modal-actions full">
+              <button type="button" class="ghost-button" id="cancelPatient">Cancelar</button>
+              <button type="submit" class="primary-button">Salvar</button>
+            </div>
+          </form>
+        `);
+    
+        document.getElementById('cancelPatient').addEventListener('click', fecharModal);
+        document.querySelector('[name="TipoPagamento"]').addEventListener('change', evento => {
+          const plano = document.querySelector('[name="PlanoSaúde"]');
+          if (evento.target.value === 'Particular' && !plano.value) plano.value = 'Particular';
+        });
+        document.getElementById('patientForm').addEventListener('submit', evento => {
+          evento.preventDefault();
+          const dados = formParaObjeto(evento.target);
+          const metodo = edicao ? 'atualizarPaciente' : 'salvarPaciente';
+          chamarServidor(metodo, dados, estado.sessao)
+            .then(() => {
+              fecharModal();
+              carregarDados();
+            })
+            .catch(mostrarErro);
+        });
+      }
+    
+      function abrirModalStatus(paciente) {
+        abrirModal('Mudar status', `
+          <form id="statusForm" class="form-grid">
+            ${select('Status', estado.statusDisponiveis, paciente.Status, true)}
+            ${campo('DataCirurgia', paciente.DataCirurgia, false, 'date')}
+            ${campo('HoraCirurgia', paciente.HoraCirurgia, false, 'time')}
+            ${select('Hospital', estado.hospitais.map(item => item.Nome), paciente.Hospital)}
+            <div class="modal-actions full">
+              <button type="button" class="ghost-button" id="cancelStatus">Cancelar</button>
+              <button type="submit" class="primary-button">Salvar status</button>
+            </div>
+          </form>
+        `);
+        document.getElementById('cancelStatus').addEventListener('click', fecharModal);
+        document.getElementById('statusForm').addEventListener('submit', evento => {
+          evento.preventDefault();
+          const dados = formParaObjeto(evento.target);
+          chamarServidor('alterarStatusPaciente', paciente.ID, dados.Status, dados.DataCirurgia, dados.Hospital, dados.HoraCirurgia, estado.sessao)
+            .then(() => {
+              fecharModal();
+              carregarDados();
+            })
+            .catch(mostrarErro);
+        });
+      }
+    
+      function abrirHistorico(paciente) {
+        abrirModal('Histórico do paciente', '<p>Carregando histórico...</p>');
+        chamarServidor('obterHistoricoPaciente', paciente.ID, estado.sessao)
+          .then(historico => {
+            document.getElementById('modalBody').innerHTML = `
+              <div class="history-list">
+                ${historico.length ? historico.map(item => `
+                  <article class="history-item">
+                    <strong>${escapar(item.TipoAção)}</strong>
+                    <div>${escapar(item.CriadoEm)} · ${escapar(item.Usuario)} · ${escapar(item.PerfilUsuario)}</div>
+                    <div>${escapar(item.CampoAlterado || '')}</div>
+                    <div>${escapar(item.Observação || '')}</div>
+                  </article>
+                `).join('') : '<p>Nenhum histórico encontrado.</p>'}
+              </div>
+            `;
+          })
+          .catch(mostrarErro);
+      }
+    
+      function abrirWhatsApp(paciente) {
+        abrirModal('WhatsApp', `
+          <form id="whatsappForm" class="form-grid">
+            ${select('Modelo', estado.modelosWhatsApp.map(item => item.Título), '', false)}
+            <label class="full">Mensagem personalizada<textarea name="Mensagem" required></textarea></label>
+            <div class="modal-actions full">
+              <button type="button" class="ghost-button" id="cancelWhats">Cancelar</button>
+              <button type="submit" class="primary-button">Abrir WhatsApp</button>
+            </div>
+          </form>
+        `);
+        const modeloSelect = document.querySelector('[name="Modelo"]');
+        const mensagem = document.querySelector('[name="Mensagem"]');
+        modeloSelect.addEventListener('change', () => {
+          const modelo = estado.modelosWhatsApp.find(item => item.Título === modeloSelect.value);
+          mensagem.value = modelo ? modelo.Mensagem : '';
+        });
+        document.getElementById('cancelWhats').addEventListener('click', fecharModal);
+        document.getElementById('whatsappForm').addEventListener('submit', evento => {
+          evento.preventDefault();
+          chamarServidor('gerarLinkWhatsApp', paciente.Telefone, mensagem.value, paciente.ID, estado.sessao)
+            .then(resposta => {
+              window.open(resposta.dados.link, '_blank');
+              fecharModal();
+              carregarDados();
+            })
+            .catch(mostrarErro);
+        });
+      }
+    
+      function arquivarPaciente(paciente) {
+        if (!confirm(`Arquivar ${paciente.Nome}?`)) return;
+        chamarServidor('arquivarPaciente', paciente.ID, estado.sessao)
+          .then(carregarDados)
+          .catch(mostrarErro);
+      }
+    
+      function abrirAdmin() {
+        abrirModal('Administração', `
+          <div class="admin-grid">
+            <section class="admin-panel">
+              <h3>Hospitais</h3>
+              <form id="hospitalForm" class="inline-form">
+                <label>Novo hospital<input name="Nome" required></label>
+                <button class="primary-button" type="submit">Adicionar</button>
+              </form>
+              ${renderizarListaAdmin(estado.hospitais, item => item.Nome)}
+            </section>
+            <section class="admin-panel">
+              <h3>Planos de saúde</h3>
+              <form id="planoForm" class="inline-form">
+                <label>Novo plano<input name="Nome" required></label>
+                <button class="primary-button" type="submit">Adicionar</button>
+              </form>
+              ${renderizarListaAdmin(estado.planosSaude, item => item.Nome)}
+            </section>
+            <section class="admin-panel">
+              <h3>Usuários</h3>
+              <form id="usuarioForm" class="form-grid">
+                ${campo('Usuário', '', true)}
+                ${select('Perfil', ['Administrador', 'Secretária'], 'Secretária', true)}
+                ${select('Ativo', ['Sim', 'Não'], 'Sim', true)}
+                <div class="modal-actions full"><button class="primary-button" type="submit">Salvar usuário</button></div>
+              </form>
+              <div class="history-list">
+                ${estado.usuarios.map(usuario => `
+                  <article class="history-item">
+                    <strong>${escapar(usuario['Usuário'])}</strong>
+                    <div>${escapar(usuario.Perfil)} · ${escapar(usuario.Ativo)}</div>
+                    <div class="card-actions">
+                      <button class="ghost-button" type="button" data-user-edit="${escapar(usuario['Usuário'])}">Editar</button>
+                      <button class="danger-button" type="button" data-user-disable="${escapar(usuario['Usuário'])}">Desativar</button>
+                    </div>
+                  </article>
+                `).join('')}
+              </div>
+            </section>
+            <section class="admin-panel">
+              <h3>Modelos de WhatsApp</h3>
+              <form id="modeloForm" class="form-grid">
+                <input type="hidden" name="ID">
+                ${campo('Título', '', true)}
+                <label class="full">Mensagem<textarea name="Mensagem" required></textarea></label>
+                ${select('Ativo', ['Sim', 'Não'], 'Sim', true)}
+                <div class="modal-actions full"><button class="primary-button" type="submit">Salvar modelo</button></div>
+              </form>
+              <div class="history-list">
+                ${estado.modelosWhatsApp.map(modelo => `
+                  <article class="history-item">
+                    <strong>${escapar(modelo.Título)}</strong>
+                    <div>${escapar(modelo.Mensagem)}</div>
+                    <div class="card-actions">
+                      <button class="ghost-button" type="button" data-model-edit="${escapar(modelo.ID)}">Editar</button>
+                    </div>
+                  </article>
+                `).join('')}
+              </div>
+            </section>
+            <section class="admin-panel">
+              <h3>Código de acesso</h3>
+              <form id="codigoForm" class="inline-form">
+                <label>Novo código<input name="Codigo" required></label>
+                <button class="danger-button" type="submit">Alterar</button>
+              </form>
+            </section>
+            <section class="admin-panel">
+              <h3>Histórico geral</h3>
+              <button id="historyGeneralButton" class="secondary-button" type="button">Ver histórico geral</button>
+              <div id="historyGeneral"></div>
+            </section>
+          </div>
+        `);
+    
+        document.getElementById('hospitalForm').addEventListener('submit', salvarAdmin('salvarHospital'));
+        document.getElementById('planoForm').addEventListener('submit', salvarAdmin('salvarPlanoSaude'));
+        document.getElementById('usuarioForm').addEventListener('submit', salvarAdminObjeto('salvarUsuario'));
+        document.getElementById('modeloForm').addEventListener('submit', salvarAdminObjeto('salvarModeloWhatsApp'));
+        document.querySelectorAll('[data-user-edit]').forEach(botao => {
+          botao.addEventListener('click', () => preencherUsuarioAdmin(botao.dataset.userEdit));
+        });
+        document.querySelectorAll('[data-user-disable]').forEach(botao => {
+          botao.addEventListener('click', () => desativarUsuarioAdmin(botao.dataset.userDisable));
+        });
+        document.querySelectorAll('[data-model-edit]').forEach(botao => {
+          botao.addEventListener('click', () => preencherModeloAdmin(botao.dataset.modelEdit));
+        });
+        document.getElementById('codigoForm').addEventListener('submit', evento => {
+          evento.preventDefault();
+          chamarServidor('alterarCodigoAcesso', evento.target.Codigo.value, estado.sessao)
+            .then(() => {
+              mostrarToast('Código alterado.');
+              evento.target.reset();
+            })
+            .catch(mostrarErro);
+        });
+        document.getElementById('historyGeneralButton').addEventListener('click', () => {
+          chamarServidor('obterHistoricoGeral', estado.sessao)
+            .then(historico => {
+              document.getElementById('historyGeneral').innerHTML = historico.map(item => `
+                <article class="history-item">
+                  <strong>${escapar(item.TipoAção)}</strong>
+                  <div>${escapar(item.CriadoEm)} · ${escapar(item.Usuario)}</div>
+                  <div>${escapar(item.NomePaciente || item.Observação || '')}</div>
+                </article>
+              `).join('');
+            })
+            .catch(mostrarErro);
+        });
+      }
+    
+      function salvarAdmin(metodo) {
+        return evento => {
+          evento.preventDefault();
+          chamarServidor(metodo, evento.target.Nome.value, estado.sessao)
+            .then(() => {
+              mostrarToast('Salvo.');
+              evento.target.reset();
+              carregarDados();
+            })
+            .catch(mostrarErro);
+        };
+      }
+    
+      function renderizarListaAdmin(itens, obterTexto) {
+        if (!itens.length) return '<p class="empty-state">Nenhum item cadastrado.</p>';
+        return `
+          <div class="history-list">
+            ${itens.map(item => `<article class="history-item">${escapar(obterTexto(item))}</article>`).join('')}
+          </div>
+        `;
+      }
+    
+      function preencherUsuarioAdmin(nome) {
+        const usuario = estado.usuarios.find(item => item['Usuário'] === nome);
+        if (!usuario) return;
+        const form = document.getElementById('usuarioForm');
+        form['Usuário'].value = usuario['Usuário'];
+        form.Perfil.value = usuario.Perfil;
+        form.Ativo.value = usuario.Ativo;
+      }
+    
+      function desativarUsuarioAdmin(nome) {
+        if (!confirm(`Desativar ${nome}?`)) return;
+        chamarServidor('desativarUsuario', nome, estado.sessao)
+          .then(() => {
+            mostrarToast('Usuário desativado.');
+            return carregarDados();
+          })
+          .catch(mostrarErro);
+      }
+    
+      function preencherModeloAdmin(id) {
+        const modelo = estado.modelosWhatsApp.find(item => item.ID === id);
+        if (!modelo) return;
+        const form = document.getElementById('modeloForm');
+        form.ID.value = modelo.ID;
+        form['Título'].value = modelo.Título;
+        form.Mensagem.value = modelo.Mensagem;
+        form.Ativo.value = modelo.Ativo;
+      }
+    
+      function salvarAdminObjeto(metodo) {
+        return evento => {
+          evento.preventDefault();
+          chamarServidor(metodo, formParaObjeto(evento.target), estado.sessao)
+            .then(() => {
+              mostrarToast('Salvo.');
+              evento.target.reset();
+              carregarDados();
+            })
+            .catch(mostrarErro);
+        };
+      }
+    
+      function abrirModal(titulo, html) {
+        document.getElementById('modalTitle').textContent = titulo;
+        document.getElementById('modalBody').innerHTML = html;
+        document.getElementById('modalBackdrop').classList.remove('hidden');
+      }
+    
+      function fecharModal() {
+        document.getElementById('modalBackdrop').classList.add('hidden');
+        document.getElementById('modalBody').innerHTML = '';
+      }
+    
+      function campo(nome, valor = '', obrigatorio = false, tipo = 'text') {
+        return `<label>${escapar(rotulo(nome))}<input type="${tipo}" name="${escapar(nome)}" value="${escapar(valor || '')}" ${obrigatorio ? 'required' : ''}></label>`;
+      }
+    
+      function campoComLista(nome, opcoes, valor = '') {
+        const listaId = `lista-${nome}`;
+        return `
+          <label>${escapar(rotulo(nome))}
+            <input name="${escapar(nome)}" list="${listaId}" value="${escapar(valor || '')}">
+            <datalist id="${listaId}">${opcoes.map(opcao => `<option value="${escapar(opcao)}"></option>`).join('')}</datalist>
+          </label>
+        `;
+      }
+    
+      function select(nome, opcoes, valor = '', obrigatorio = false) {
+        return `
+          <label>${escapar(rotulo(nome))}
+            <select name="${escapar(nome)}" ${obrigatorio ? 'required' : ''}>
+              <option value="">Selecione</option>
+              ${opcoes.map(opcao => `<option value="${escapar(opcao)}" ${opcao === valor ? 'selected' : ''}>${escapar(opcao)}</option>`).join('')}
+            </select>
+          </label>
+        `;
+      }
+    
+      function rotulo(nome) {
+        const mapa = {
+          DataNascimento: 'Data de nascimento',
+          PlanoSaúde: 'Plano de saúde',
+          TipoPagamento: 'Tipo de pagamento',
+          DataCirurgia: 'Data da cirurgia',
+          HoraCirurgia: 'Hora da cirurgia',
+          PróximaAção: 'Próxima ação',
+          DataPróximoContato: 'Data do próximo contato'
+        };
+        return mapa[nome] || nome;
+      }
+    
+      function formParaObjeto(form) {
+        return Object.fromEntries(new FormData(form).entries());
+      }
+    
+      function filtrarLocalmente(pacientes, filtro) {
+        const hoje = dataHojeLocal();
+        return pacientes.filter(paciente => {
+          if (filtro === 'Todos') return paciente.Arquivado !== 'Sim';
+          if (filtro === 'Precisa de atenção') return paciente.PrecisaAtenção && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Próximos contatos hoje') return paciente.DataPróximoContato === hoje && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Próximos contatos atrasados') return paciente.DataPróximoContato && paciente.DataPróximoContato < hoje && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Sem próxima ação definida') return !paciente.PróximaAção && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Particulares') return paciente.TipoPagamento === 'Particular' && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Convênios') return paciente.TipoPagamento === 'Convênio' && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Arquivados') return paciente.Arquivado === 'Sim';
+          if (filtro === 'Pendentes/travados') return paciente.Status === 'Pendente / travado' && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Solicitado ao plano') return paciente.Status === 'Solicitado ao plano de saúde' && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Realizados') return paciente.Status === 'Realizado' && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Cancelados') return paciente.Status === 'Cancelado' && paciente.Arquivado !== 'Sim';
+          return paciente.Status === filtro && paciente.Arquivado !== 'Sim';
+        });
+      }
+    
+      function chamarServidor(nome, ...args) {
+        return new Promise((resolve, reject) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)[nome](...args);
+        });
+      }
+    
+      function formatarData(valor) {
+        if (!valor) return '';
+        const partes = String(valor).slice(0, 10).split('-');
+        if (partes.length !== 3) return valor;
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      }
+    
+      function dataHojeLocal() {
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        return `${ano}-${mes}-${dia}`;
+      }
+    
+      function escapar(valor) {
+        return String(valor ?? '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+    
+      function mostrarToast(mensagem) {
+        const toast = document.getElementById('toast');
+        toast.textContent = mensagem;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2600);
+      }
+    
+      function mostrarErro(erro) {
+        mostrarToast(erro.message || String(erro));
+      }
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila Cirúrgica ORL</title>
+    <style>
+      :root {
+        --ink: #19313a;
+        --primary: #08766f;
+        --bg: #eaf2f1;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #e8f3f1 0%, #f6faf8 48%, #edf3f7 100%);
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .app-frame {
+        width: 100vw;
+        height: 100vh;
+        border: 0;
+        display: block;
+      }
+
+      .setup {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .setup-card {
+        width: min(620px, 100%);
+        background: #fff;
+        border: 1px solid #d5e3e5;
+        border-radius: 8px;
+        padding: 24px;
+        box-shadow: 0 18px 42px rgba(25, 49, 58, 0.14);
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 28px;
+      }
+
+      p {
+        line-height: 1.5;
+      }
+
+      code {
+        background: #eef6f5;
+        border: 1px solid #d5e3e5;
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const APPS_SCRIPT_WEB_APP_URL = 'COLE_AQUI_A_URL_DO_WEB_APP_DO_APPS_SCRIPT';
+
+      if (APPS_SCRIPT_WEB_APP_URL.startsWith('https://')) {
+        document.body.innerHTML = `<iframe class="app-frame" title="Fila Cirúrgica ORL" src="${APPS_SCRIPT_WEB_APP_URL}"></iframe>`;
+      } else {
+        document.body.innerHTML = `
+          <main class="setup">
+            <section class="setup-card">
+              <h1>Fila Cirúrgica ORL</h1>
+              <p>Este arquivo é a página publicada pelo GitHub Pages.</p>
+              <p>Depois de publicar o Web App no Google Apps Script, substitua <code>COLE_AQUI_A_URL_DO_WEB_APP_DO_APPS_SCRIPT</code> pela URL gerada pelo Apps Script.</p>
+              <p>A planilha continua privada no Google Sheets; o GitHub hospeda apenas esta página de entrada.</p>
+            </section>
+          </main>
+        `;
+      }
+    </script>
+  </body>
+</html>
