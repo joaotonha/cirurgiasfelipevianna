@@ -231,16 +231,16 @@
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
-        margin-bottom: 18px;
+        margin-bottom: 14px;
       }
     
       .summary-card {
         position: relative;
-        min-height: 104px;
+        min-height: 78px;
         background: linear-gradient(180deg, #ffffff, #f5fbfa);
         border: 1px solid rgba(213, 227, 229, 0.95);
         border-radius: 8px;
-        padding: 15px;
+        padding: 12px 14px;
         overflow: hidden;
         box-shadow: var(--shadow-soft);
       }
@@ -253,25 +253,19 @@
         background: var(--primary);
       }
     
-      .summary-card:nth-child(2)::before,
-      .summary-card:nth-child(7)::before,
-      .summary-card:nth-child(8)::before {
-        background: var(--gold);
-      }
-    
-      .summary-card:nth-child(4)::before,
-      .summary-card:nth-child(5)::before {
-        background: #4f9d57;
-      }
-    
-      .summary-card:nth-child(6)::before {
+      .summary-card:nth-child(2)::before {
         background: var(--accent);
+      }
+
+      .summary-card:nth-child(3)::before,
+      .summary-card:nth-child(4)::before {
+        background: #4f9d57;
       }
     
       .summary-card strong {
         display: block;
-        font-size: 30px;
-        margin-bottom: 8px;
+        font-size: 25px;
+        margin-bottom: 4px;
         color: var(--ink);
       }
     
@@ -320,6 +314,14 @@
         border-color: var(--primary-dark);
         color: #fff;
       }
+
+      .add-patient-button {
+        background: linear-gradient(180deg, #f08a61, var(--accent));
+        border-color: #b94830;
+        color: #fff;
+        padding: 12px 16px;
+        box-shadow: 0 10px 24px rgba(216, 95, 67, 0.25);
+      }
     
       .secondary-button {
         background: var(--primary-soft);
@@ -365,20 +367,18 @@
         pointer-events: none;
       }
     
-      .patient-card[data-status="Aguardando tomografia"],
-      .patient-card[data-status="Aguardando exames/documentos"] {
+      .patient-card[data-status="Aguardando tomografia"] {
         background: linear-gradient(180deg, #fff6c9, var(--warning));
         border-left-color: var(--gold);
       }
     
-      .patient-card[data-status="Solicitado ao plano de saúde"],
-      .patient-card[data-status="Em análise pelo plano"] {
+      .patient-card[data-status="Aguardando autorização"] {
         background: linear-gradient(180deg, #edf7ff, var(--blue));
         border-left-color: #2f77ba;
       }
     
-      .patient-card[data-status="Autorizado"],
-      .patient-card[data-status="Aguardando agendamento"] {
+      .patient-card[data-status="Pronto para operar"],
+      .patient-card[data-status="Autorizado"] {
         background: linear-gradient(180deg, #f0fbef, var(--green));
         border-left-color: #4f9d57;
       }
@@ -388,16 +388,12 @@
         border-left-color: #8568c5;
       }
     
-      .patient-card[data-status="Pendente / travado"] {
-        background: linear-gradient(180deg, #ffe9df, var(--red));
-        border-left-color: var(--accent);
-      }
-    
       .patient-card[data-status="Realizado"] {
         background: linear-gradient(180deg, #f8fafb, var(--gray));
         border-left-color: #839198;
       }
-    
+
+      .patient-card[data-status="Negado"],
       .patient-card[data-status="Cancelado"] {
         background: linear-gradient(180deg, #dce3e5, var(--dark-gray));
         border-left-color: #52656d;
@@ -447,6 +443,27 @@
         color: var(--muted);
         font-size: 12px;
         font-weight: 900;
+      }
+
+      .detail-wide {
+        grid-column: 1 / -1;
+      }
+
+      .surgery-box {
+        position: relative;
+        background: rgba(255, 255, 255, 0.74);
+        border: 1px solid rgba(8, 118, 111, 0.22);
+        border-left: 5px solid var(--primary);
+        border-radius: 8px;
+        padding: 10px 12px;
+      }
+
+      .surgery-box span {
+        display: block;
+        color: var(--primary-dark);
+        font-size: 12px;
+        font-weight: 900;
+        margin-bottom: 3px;
       }
     
       .notes-box {
@@ -667,6 +684,7 @@
           </div>
           <div class="user-area">
             <span id="usuarioLogado"></span>
+            <button class="primary-button add-patient-button" id="newPatientButton" type="button">Novo paciente</button>
             <button class="ghost-button" id="adminButton" type="button">Administração</button>
             <button class="secondary-button" id="refreshButton" type="button">Atualizar</button>
             <button class="danger-button" id="logoutButton" type="button">Sair</button>
@@ -677,7 +695,6 @@
 
         <section class="toolbar">
           <div class="filters" id="filters"></div>
-          <button class="primary-button" id="newPatientButton" type="button">Novo paciente</button>
         </section>
 
         <section id="patientsList" class="patients-grid"></section>
@@ -701,6 +718,7 @@
         sessao: null,
         pacientes: [],
         hospitais: [],
+        locaisAtendimento: [],
         planosSaude: [],
         modelosWhatsApp: [],
         usuarios: [],
@@ -713,15 +731,14 @@
       const filtros = [
         'Todos',
         'Precisa de atenção',
+        'Pendentes',
         'Aguardando tomografia',
-        'Aguardando exames/documentos',
-        'Solicitado ao plano',
-        'Em análise pelo plano',
+        'Pronto para operar',
+        'Aguardando autorização',
         'Autorizado',
-        'Aguardando agendamento',
         'Agendado',
-        'Pendentes/travados',
         'Realizados',
+        'Negados',
         'Cancelados',
         'Próximos contatos hoje',
         'Próximos contatos atrasados',
@@ -804,6 +821,7 @@
           .then(dados => {
             estado.pacientes = dados.pacientes || [];
             estado.hospitais = dados.hospitais || [];
+            estado.locaisAtendimento = dados.locaisAtendimento || [];
             estado.planosSaude = dados.planosSaude || [];
             estado.modelosWhatsApp = dados.modelosWhatsApp || [];
             estado.usuarios = dados.usuarios || [];
@@ -821,13 +839,9 @@
       function renderizarResumo(resumo) {
         const itens = [
           ['Total em acompanhamento', resumo.total],
-          ['Aguardando tomografia', resumo.aguardandoTomografia],
-          ['Solicitados ao plano', resumo.solicitadosPlano],
+          ['Pendentes', resumo.pendentes],
           ['Autorizados', resumo.autorizados],
-          ['Agendados', resumo.agendados],
-          ['Pendentes/travados', resumo.pendentesTravados],
-          ['Próximos contatos hoje', resumo.proximosHoje],
-          ['Próximos contatos atrasados', resumo.proximosAtrasados]
+          ['Agendados', resumo.agendados]
         ];
     
         document.getElementById('summaryGrid').innerHTML = itens.map(([label, valor]) => `
@@ -875,11 +889,13 @@
             ${motivos ? `<div class="attention-list">${motivos}</div>` : ''}
             <div class="patient-details">
               <div><span>Plano:</span> ${escapar(paciente.PlanoSaúde || 'Particular')}</div>
+              ${paciente.LocalAtendimento ? `<div><span>Atendimento:</span> ${escapar(paciente.LocalAtendimento)}</div>` : ''}
               <div><span>Telefone:</span> ${escapar(paciente.Telefone)}</div>
               <div><span>Email:</span> ${escapar(paciente.Email || 'Não informado')}</div>
+              ${paciente.Cirurgia ? `<div class="detail-wide surgery-box"><span>Cirurgia</span>${escapar(paciente.Cirurgia)}</div>` : ''}
               <div><span>Próxima ação:</span> ${escapar(paciente.PróximaAção || 'Não definida')}</div>
               <div><span>Próximo contato:</span> ${formatarData(paciente.DataPróximoContato) || 'Não definido'}</div>
-              ${paciente.DataCirurgia ? `<div><span>Cirurgia:</span> ${formatarData(paciente.DataCirurgia)} ${escapar(paciente.HoraCirurgia || '')}</div>` : ''}
+              ${paciente.DataCirurgia ? `<div><span>Data da cirurgia:</span> ${formatarData(paciente.DataCirurgia)} ${escapar(paciente.HoraCirurgia || '')}</div>` : ''}
               ${paciente.Hospital ? `<div><span>Hospital:</span> ${escapar(paciente.Hospital)}</div>` : ''}
               <div><span>Última atualização:</span> ${escapar(paciente.AtualizadoEm || 'Não informado')}</div>
             </div>
@@ -914,8 +930,10 @@
             ${campo('Telefone', paciente?.Telefone, true)}
             ${campo('Email', paciente?.Email)}
             ${campo('DataNascimento', paciente?.DataNascimento, false, 'date')}
+            ${campoComLista('LocalAtendimento', estado.locaisAtendimento.map(item => item.Nome), paciente?.LocalAtendimento)}
             ${select('TipoPagamento', ['Convênio', 'Particular'], paciente?.TipoPagamento, true)}
             ${campoComLista('PlanoSaúde', estado.planosSaude.map(item => item.Nome), paciente?.PlanoSaúde)}
+            <label class="full">Cirurgia<textarea name="Cirurgia" placeholder="Descreva qual cirurgia será realizada">${escapar(paciente?.Cirurgia || '')}</textarea></label>
             ${select('Status', estado.statusDisponiveis, paciente?.Status, true)}
             ${select('PróximaAção', estado.proximasAcoes, paciente?.PróximaAção, true)}
             ${campo('DataPróximoContato', paciente?.DataPróximoContato, false, 'date')}
@@ -1051,6 +1069,14 @@
               ${renderizarListaAdmin(estado.planosSaude, item => item.Nome)}
             </section>
             <section class="admin-panel">
+              <h3>Locais de atendimento</h3>
+              <form id="localAtendimentoForm" class="inline-form">
+                <label>Novo local<input name="Nome" required></label>
+                <button class="primary-button" type="submit">Adicionar</button>
+              </form>
+              ${renderizarListaAdmin(estado.locaisAtendimento, item => item.Nome)}
+            </section>
+            <section class="admin-panel">
               <h3>Usuários</h3>
               <form id="usuarioForm" class="form-grid">
                 ${campo('Usuário', '', true)}
@@ -1109,6 +1135,7 @@
     
         document.getElementById('hospitalForm').addEventListener('submit', salvarAdmin('salvarHospital'));
         document.getElementById('planoForm').addEventListener('submit', salvarAdmin('salvarPlanoSaude'));
+        document.getElementById('localAtendimentoForm').addEventListener('submit', salvarAdmin('salvarLocalAtendimento'));
         document.getElementById('usuarioForm').addEventListener('submit', salvarAdminObjeto('salvarUsuario'));
         document.getElementById('modeloForm').addEventListener('submit', salvarAdminObjeto('salvarModeloWhatsApp'));
         document.querySelectorAll('[data-user-edit]').forEach(botao => {
@@ -1251,6 +1278,7 @@
           TipoPagamento: 'Tipo de pagamento',
           DataCirurgia: 'Data da cirurgia',
           HoraCirurgia: 'Hora da cirurgia',
+          LocalAtendimento: 'Local do atendimento',
           PróximaAção: 'Próxima ação',
           DataPróximoContato: 'Data do próximo contato'
         };
@@ -1272,9 +1300,9 @@
           if (filtro === 'Particulares') return paciente.TipoPagamento === 'Particular' && paciente.Arquivado !== 'Sim';
           if (filtro === 'Convênios') return paciente.TipoPagamento === 'Convênio' && paciente.Arquivado !== 'Sim';
           if (filtro === 'Arquivados') return paciente.Arquivado === 'Sim';
-          if (filtro === 'Pendentes/travados') return paciente.Status === 'Pendente / travado' && paciente.Arquivado !== 'Sim';
-          if (filtro === 'Solicitado ao plano') return paciente.Status === 'Solicitado ao plano de saúde' && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Pendentes') return ['Aguardando tomografia', 'Pronto para operar', 'Aguardando autorização'].includes(paciente.Status) && paciente.Arquivado !== 'Sim';
           if (filtro === 'Realizados') return paciente.Status === 'Realizado' && paciente.Arquivado !== 'Sim';
+          if (filtro === 'Negados') return paciente.Status === 'Negado' && paciente.Arquivado !== 'Sim';
           if (filtro === 'Cancelados') return paciente.Status === 'Cancelado' && paciente.Arquivado !== 'Sim';
           return paciente.Status === filtro && paciente.Arquivado !== 'Sim';
         });
@@ -1325,4 +1353,3 @@
     </script>
   </body>
 </html>
-
